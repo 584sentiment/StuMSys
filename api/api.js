@@ -19,7 +19,11 @@ Mock.mock('/initDatas', {
 Mock.mock('/addRandom', function () {
     var newData = Mock.mock(template);
     var students = JSON.parse(localStorage.students);
-    newData.id = parseInt(students[students.length - 1].id) + 1;
+    if(!students.length){
+        newData.id=1;
+    }else{
+        newData.id = parseInt(students[students.length - 1].id) + 1;
+    }
     // console.log(newData)
     return newData;
 });
