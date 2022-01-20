@@ -25,7 +25,8 @@ Mock.mock('/addRandom', function () {
         newData.id = parseInt(students[students.length - 1].id) + 1;
     }
     // console.log(newData)
-    return newData;
+    students.push(newData);
+    return students;
 });
 
 function queryToObj(str){//将url中的key=value&key=value...解析成对象

@@ -72,7 +72,7 @@ Page.prototype.bindEvent=function(){
     this.next.click(function(){
         This.cn++;
         if(This.cn>This.tn){
-            This.cn=1;
+            This.cn=This.tn;
             alert("当前页已经是最后一页了")
         }
         This.init();
