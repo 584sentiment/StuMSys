@@ -314,6 +314,7 @@ $('#addForm .submitBtn').click(function () {
             data: newStu,
             success: function (res) {
                 students = res;
+                localStorage.students=JSON.stringify(students);
                 renderList();
                 tab(0);
             }
