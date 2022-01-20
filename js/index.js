@@ -47,6 +47,13 @@ function initData() {
 }
 
 function renderList() {
+    // console.log(!students.length);
+    if (!students.length) {
+        // 没有搜索到数据
+        $('.studentTable').html('抱歉！没有找到您想要的数据。');
+        $('#page').html('');
+        return;
+    }
     renderTable();
     $('#page').page({
         cn,
@@ -133,16 +140,20 @@ $('#searchBtn').click(function () {
         dataType: 'json',
         success: function (res) {
             // console.log(res)
-            if (!res.length) {
-                // 没有搜索到数据
-                $('.studentTable').html('');
-                $('#page').html('抱歉！没有找到您想要的数据。');
-            } else {
-                students = res;
-                tn = Math.ceil(students.length / ppn);
-                cn = 1;
-                renderList();
-            }
+            // if (!res.length) {
+            //     // 没有搜索到数据
+            //     $('.studentTable').html('抱歉！没有找到您想要的数据。');
+            //     $('#page').html('');
+            // } else {
+            //     students = res;
+            //     tn = Math.ceil(students.length / ppn);
+            //     cn = 1;
+            //     renderList();
+            // }
+            students = res;
+            tn = Math.ceil(students.length / ppn);
+            cn = 1;
+            renderList();
         }
     })
 
@@ -241,7 +252,7 @@ $('.studentTable').on('click', '.editBtn', function () {
             $('#tel').val(res[0].tel);
             $('#email').val(res[0].email);
             $('#address').val(res[0].add);
-            editId = res[0].id;
+            editId=res[0].id;
             if (res[0].sex === '男') {
                 $('#male').prop('checked', true)
                 $('#female').prop('checked', false)
@@ -297,7 +308,7 @@ $('#addForm .submitBtn').click(function () {
             data: newStu,
             success: function (res) {
                 students = res;
-                localStorage.students = JSON.stringify(students);
+                localStorage.students=JSON.stringify(students);
                 tn = Math.ceil(students.length / ppn);
                 cn = tn;
                 renderList();
@@ -306,7 +317,7 @@ $('#addForm .submitBtn').click(function () {
         })
     } else {
         // 修改
-        newStu.id = editId;
+        newStu.id=editId;
         $.ajax({
             url: '/edit',
             type: 'post',
@@ -314,7 +325,7 @@ $('#addForm .submitBtn').click(function () {
             data: newStu,
             success: function (res) {
                 students = res;
-                localStorage.students = JSON.stringify(students);
+                localStorage.students=JSON.stringify(students);
                 renderList();
                 tab(0);
             }
@@ -324,23 +335,24 @@ $('#addForm .submitBtn').click(function () {
 
 // 删除学生
 $('.studentTable').on('click', '.delBtn', function () {
-    if (confirm('确认删除该学生信息吗？删除后不可恢复！')) {
-        var id = this.dataset.id;
+    if(confirm('确认删除该学生信息吗？删除后不可恢复！')){
+        var id=this.dataset.id;
         $.ajax({
-            url: `/del/${id}`,
-            type: "delete",
-            dataType: 'json',
-            success: function (res) {
+            url:`/del/${id}`,
+            type:"delete",
+            dataType:'json',
+            success:function(res){
                 // console.log(res);
-                if (!res.length) {
-                    $('.studentTable').html('');
-                    $('#page').html('当前学生信息为空');
-                    return;
-                }
-                localStorage.students = JSON.stringify(res);
-                tn = Math.ceil(res.length / ppn);
-                if (cn > tn) {
-                    cn = tn;
+                students=res;
+                localStorage.students=JSON.stringify(students);
+                // if (!res.length) {
+                //     $('.studentTable').html('当前学生信息为空');
+                //     $('#page').html('');
+                //     return;
+                // }
+                tn=Math.ceil(students.length/ppn);
+                if(cn>tn){
+                    cn=tn;
                 }
                 renderList();
             }
@@ -348,3 +360,15 @@ $('.studentTable').on('click', '.delBtn', function () {
         // alert('删除成功！')
     }
 })
+
+// 表单提交绑定回车
+$('#addForm').keydown(function(e){
+    // console.log(e.key)
+    if(e.key==="Enter"){
+        $('#addForm .submitBtn').click();
+    }
+    if (e.key === 'Escape') {
+        $('.returnBtn').click();
+    };
+})
+
